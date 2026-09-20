@@ -56,7 +56,7 @@ Then install demucs with `uv`, picking the variant matching your hardware:
 **Nvidia GPU (CUDA):**
 
 ```sh
-uv tool install --force --with numpy --torch-backend=cu128 demucs
+uv tool install --force --with numpy --torch-backend=cu132 demucs
 ```
 
 **CPU only:**
@@ -114,6 +114,40 @@ uv tool install --force --with numpy --with diffq --torch-backend=cpu demucs
 4. The separation runs in the background. When it finishes you get a notification and the stems folder opens — drag the stems into your session.
 
 Stems are written to `<session>/demucs/run_<timestamp>/stems/`. Logs (`run.log`, `trace.log`, `demucs.log`) are kept in the same run folder for troubleshooting. If the separation fails, the failure notification includes the relevant error lines extracted from the log.
+
+## Cleanup / uninstallation
+
+### Removing downloaded models
+
+Demucs downloads each model on first use and caches it in `~/.cache/torch/hub/checkpoints/` (or `$TORCH_HOME/hub/checkpoints/` if `TORCH_HOME` is set). The cached files are named `<signature>-<hash>.th`
+
+To free disk space, delete the files for the model(s) you no longer need. For example, to remove `mdx_q`:
+
+```sh
+ls ~/.cache/torch/hub/checkpoints/                          # see what's cached
+rm ~/.cache/torch/hub/checkpoints/{6b9c2ca1,b72baf4e,42e558d4,305bc58f}-*.th
+```
+
+The model is simply re-downloaded the next time you use it, so this is safe.
+
+### Removing demucs
+
+```sh
+uv tool uninstall demucs
+rm -rf ~/.cache/torch/hub/checkpoints/      # optional: remove all cached models
+```
+
+### Removing the script
+
+Delete the script from Ardour's script folder and restart Ardour:
+
+```sh
+rm ~/.config/ardour9/scripts/demucs_stem_separation.lua
+```
+
+(Replace `ardour9` with your Ardour version's config folder.)
+
+Generated stems and logs live inside your sessions under `<session>/demucs/` — delete those folders per session if you no longer need them.
 
 ## License
 
