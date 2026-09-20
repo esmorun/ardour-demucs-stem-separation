@@ -96,11 +96,11 @@ uv tool install --force --with numpy --with diffq --torch-backend=cpu demucs
 1. Copy [demucs_stem_separation.lua](demucs_stem_separation.lua) to Ardour's script folder:
 
    ```sh
-   mkdir -p ~/.config/ardour8/scripts
-   cp demucs_stem_separation.lua ~/.config/ardour8/scripts/
+   mkdir -p ~/.config/ardour9/scripts
+   cp demucs_stem_separation.lua ~/.config/ardour9/scripts/
    ```
 
-   (Replace `ardour8` with your Ardour version's config folder, e.g. `ardour7`.)
+   (Replace `ardour9` with your Ardour version's config folder, e.g. `ardour10`.)
 
 2. Restart Ardour.
 

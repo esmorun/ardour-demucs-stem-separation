@@ -173,6 +173,9 @@ function factory ()
 		add ('fail () { notify "Stem separation failed: $1"; exit 1; }')
 		-- one-line summary of the relevant error lines in a log, for notifications
 		add ('errfrom () { grep -iaE "error|not installed|traceback|exception" "$1" 2>/dev/null | tail -n 2 | tr "\n" " " | cut -c1-200; }')
+		-- remove intermediate audio even when a job fails partway (logs are kept)
+		add ('cleanup () { [ -n "$OUT" ] && rm -f "$OUT/input.wav" "$OUT/rest.wav"; return 0; }')
+		add ('trap cleanup EXIT')
 		add ('command -v ffmpeg >/dev/null 2>&1 || fail "ffmpeg is not installed (sudo pacman -S ffmpeg)"')
 		add ("")
 		add ("# encode one wav ($1) into the chosen format/bit depth; $2 = output path without extension")
@@ -227,7 +230,8 @@ function factory ()
 				' -c:a pcm_s24le "$OUT/rest.wav" > "$OUT/ffmpeg_rest.log" 2>&1 || fail "mixing rest failed, see $OUT/ffmpeg_rest.log"')
 			add ('  encode "$OUT/rest.wav" "$WORK/stems/$BASE - rest" || fail "encoding rest failed"')
 			add ("fi")
-			add ('rm -rf "$OUT/' .. opt.model .. '" "$OUT/input.wav" "$OUT/rest.wav"')
+			-- input.wav/rest.wav are removed by the EXIT trap, also on failure
+			add ('rm -rf "$OUT/' .. opt.model .. '"')
 
 			if job.offset ~= 0 then
 				table.insert (positions, string.format ("%s: start at %.3f s", base, job.offset / sr))
