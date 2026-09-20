@@ -89,15 +89,22 @@ function factory ()
 		local STEMS = { "vocals", "drums", "bass", "guitar", "piano", "other" }
 		local dlg = LuaDialog.Dialog ("Demucs stem separation", {
 			{ type = "label", colspan = 2, title = string.format ("%d source file(s) will be processed.", #jobs) },
-			{ type = "dropdown", key = "model", title = "Model", values = {
-				["htdemucs_6s - 6 stems (adds guitar + piano)"] = "htdemucs_6s",
-				["htdemucs - fast, 4 stems"]                    = "htdemucs",
-				["htdemucs_ft - slower, best quality, 4 stems"] = "htdemucs_ft",
-			}, default = "htdemucs_6s - 6 stems (adds guitar + piano)" },
+		-- GTK treats "_" in the popup menu as a mnemonic marker, but the
+		-- selected-value button shows the raw label, so doubling "_" is not
+		-- an option; keep plain names (menu shows a harmless underline)
+		{ type = "dropdown", key = "model", title = "Model", values = {
+				["htdemucs_6s"]		= "htdemucs_6s",
+				["htdemucs"]		= "htdemucs",
+				["htdemucs_ft"]		= "htdemucs_ft",
+				["mdx"]				= "mdx",
+				["mdx_extra"]		= "mdx_extra",
+				["mdx_q"]			= "mdx_q",
+				["mdx_extra_q"]		= "mdx_extra_q",
+		}, default = "htdemucs_6s" },
 			{ type = "dropdown", key = "format", title = "Format", values = {
-			["MP3"]             = "mp3",
-			["FLAC"] = "flac",
-			["WAV"]             = "wav",
+				["MP3"] = "mp3",
+				["FLAC"] = "flac",
+				["WAV"] = "wav",
 		}, default = "MP3" },
 		{ type = "dropdown", key = "mp3q", title = "MP3 quality (VBR)", values = {
 			["V0 - best (~245 kbps)"]   = "0",
