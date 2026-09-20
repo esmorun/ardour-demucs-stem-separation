@@ -1,6 +1,6 @@
 # ardour-demucs-stem-separation
 
-Lua script for Ardour to do stem separation via the [demucs](https://github.com/facebookresearch/demucs) Python library on Linux.
+Lua script for Ardour to do stem separation via the [demucs](https://pypi.org/project/demucs) Python library on Linux.
 
 Select one or more audio regions, run the script, and it splits each source file into stems (vocals, drums, bass, guitar, piano, other) in the background. When finished you get a desktop notification and the stems folder opens in your file manager, ready to drag into Ardour.
 
