@@ -11,6 +11,7 @@ Select one or more audio regions, run the script, and it splits each source file
 - Ardour (with Lua scripting support — included in official builds)
 - ffmpeg (stereo merge and format conversion)
 - demucs (installed via `uv`, see below)
+- Optional: `diffq` (required for the quantized `mdx_q` / `mdx_extra_q` models, see below)
 - Optional: `notify-send` (libnotify) for desktop notifications
 
 ## Installing dependencies
@@ -82,6 +83,14 @@ uv tool install --force --with numpy --torch-backend=rocm7.2 demucs
 
 The script checks `~/.local/bin/demucs` first, so it works even when Ardour is launched from a desktop icon that does not have `~/.local/bin` in its `PATH`.
 
+### Quantized models (mdx_q, mdx_extra_q)
+
+The quantized models additionally need the `diffq` Python package — without it, demucs fails with "Trying to use DiffQ, but diffq is not installed." Reinstall demucs with `diffq` added (use the same `--torch-backend` as in your original install):
+
+```sh
+uv tool install --force --with numpy --with diffq --torch-backend=cpu demucs
+```
+
 ## Installing the script in Ardour
 
 1. Copy [demucs_stem_separation.lua](demucs_stem_separation.lua) to Ardour's script folder:
@@ -104,7 +113,7 @@ The script checks `~/.local/bin/demucs` first, so it works even when Ardour is l
 3. Choose the model, output format (MP3/FLAC/WAV), and which stems to export.
 4. The separation runs in the background. When it finishes you get a notification and the stems folder opens — drag the stems into your session.
 
-Stems are written to `<session>/demucs/run_<timestamp>/stems/`. Logs (`run.log`, `trace.log`, `demucs.log`) are kept in the same run folder for troubleshooting.
+Stems are written to `<session>/demucs/run_<timestamp>/stems/`. Logs (`run.log`, `trace.log`, `demucs.log`) are kept in the same run folder for troubleshooting. If the separation fails, the failure notification includes the relevant error lines extracted from the log.
 
 ## License
 

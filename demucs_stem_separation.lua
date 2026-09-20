@@ -171,6 +171,8 @@ function factory ()
 		add ("MIXREST=" .. (opt.mix_rest and "1" or "0"))
 		add ('notify () { command -v notify-send >/dev/null 2>&1 && notify-send -a Ardour Demucs "$1"; return 0; }')
 		add ('fail () { notify "Stem separation failed: $1"; exit 1; }')
+		-- one-line summary of the relevant error lines in a log, for notifications
+		add ('errfrom () { grep -iaE "error|not installed|traceback|exception" "$1" 2>/dev/null | tail -n 2 | tr "\n" " " | cut -c1-200; }')
 		add ('command -v ffmpeg >/dev/null 2>&1 || fail "ffmpeg is not installed (sudo pacman -S ffmpeg)"')
 		add ("")
 		add ("# encode one wav ($1) into the chosen format/bit depth; $2 = output path without extension")
@@ -205,7 +207,7 @@ function factory ()
 
 			-- demucs always writes 24-bit wav here; ffmpeg converts afterwards
 			add (q (demucs) .. " -n " .. opt.model .. ' --int24 -o "$OUT" "$INPUT"' ..
-				' > "$OUT/demucs.log" 2>&1 || fail "demucs failed, see $OUT/demucs.log"')
+				' > "$OUT/demucs.log" 2>&1 || fail "demucs failed: $(errfrom "$OUT/demucs.log") (log: $OUT/demucs.log)"')
 
 			-- demucs writes $OUT/<model>/<track>/<stem>.wav
 			add ("set --")
