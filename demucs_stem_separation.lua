@@ -102,10 +102,10 @@ function factory ()
 				["mdx_extra_q"]		= "mdx_extra_q",
 		}, default = "htdemucs_6s" },
 			{ type = "dropdown", key = "format", title = "Format", values = {
-				["MP3"] = "mp3",
-				["FLAC"] = "flac",
 				["WAV"] = "wav",
-		}, default = "MP3" },
+				["FLAC"] = "flac",
+				["MP3"] = "mp3",
+		}, default = "WAV" },
 		{ type = "dropdown", key = "mp3q", title = "MP3 quality (VBR)", values = {
 			["V0 - best (~245 kbps)"]   = "0",
 			["V1 (~225 kbps)"]          = "1",
